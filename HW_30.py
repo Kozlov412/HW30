@@ -62,3 +62,34 @@ class JsonFile(AbstractFile):
                 f.truncate()
         except IOError as e:
             print(f"Ошибка при добавлении данных в JSON-файл: {e}")
+
+class TxtFile(AbstractFile):
+    """Класс для работы с текстовыми файлами."""
+
+    def __init__(self, file_path: str):
+        self.file_path = file_path
+
+    def read(self) -> str:
+        """Читает данные из текстового файла."""
+        try:
+            with open(self.file_path, 'r') as f:
+                return f.read()
+        except FileNotFoundError as e:
+            print(f"Ошибка при чтении текстового файла: {e}")
+            return ""
+
+    def write(self, data: str) -> None:
+        """Записывает данные в текстовый файл."""
+        try:
+            with open(self.file_path, 'w') as f:
+                f.write(data)
+        except IOError as e:
+            print(f"Ошибка при записи в текстовый файл: {e}")
+
+    def append(self, data: str) -> None:
+        """Добавляет данные в текстовый файл."""
+        try:
+            with open(self.file_path, 'a') as f:
+                f.write(data)
+        except IOError as e:
+            print(f"Ошибка при добавлении данных в текстовый файл: {e}")
