@@ -93,3 +93,37 @@ class TxtFile(AbstractFile):
                 f.write(data)
         except IOError as e:
             print(f"Ошибка при добавлении данных в текстовый файл: {e}")
+
+class CsvFile(AbstractFile):
+    """Класс для работы с CSV-файлами."""
+
+    def __init__(self, file_path: str):
+        self.file_path = file_path
+
+    def read(self) -> List[List[str]]:
+        """Читает данные из CSV-файла."""
+        try:
+            with open(self.file_path, 'r') as f:
+                reader = csv.reader(f)
+                return list(reader)
+        except FileNotFoundError as e:
+            print(f"Ошибка при чтении CSV-файла: {e}")
+            return []
+
+    def write(self, data: List[List[str]]) -> None:
+        """Записывает данные в CSV-файл."""
+        try:
+            with open(self.file_path, 'w', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerows(data)
+        except IOError as e:
+            print(f"Ошибка при записи в CSV-файл: {e}")
+
+    def append(self, data: List[List[str]]) -> None:
+        """Добавляет данные в CSV-файл."""
+        try:
+            with open(self.file_path, 'a', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerows(data)
+        except IOError as e:
+            print(f"Ошибка при добавлении данных в CSV-файл: {e}")            
