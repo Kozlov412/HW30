@@ -21,3 +21,44 @@ class AbstractFile(abc.ABC):
     def append(self, data: Any) -> None:
         """Добавляет данные в файл."""
         pass
+
+class JsonFile(AbstractFile):
+    """Класс для работы с JSON-файлами."""
+
+    def __init__(self, file_path: str):
+        self.file_path = file_path
+
+    def read(self) -> Dict:
+        """Читает данные из JSON-файла."""
+        try:
+            with open(self.file_path, 'r') as f:
+                return json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"Ошибка при чтении JSON-файла: {e}")
+            return {}
+
+    def write(self, data: Dict) -> None:
+        """Записывает данные в JSON-файл."""
+        try:
+            with open(self.file_path, 'w') as f:
+                json.dump(data, f, indent=4)
+        except IOError as e:
+            print(f"Ошибка при записи в JSON-файл: {e}")
+
+    def append(self, data: Dict) -> None:
+        """Добавляет данные в JSON-файл."""
+        try:
+            with open(self.file_path, 'r+') as f:
+                try:
+                    existing_data = json.load(f)
+                    # Проверяем, является ли existing_data списком. Если нет - превращаем в список
+                    if not isinstance(existing_data, list):
+                        existing_data = [existing_data]
+                except json.JSONDecodeError:
+                    existing_data = [] # Если файл пуст или поврежден, создаем пустой список
+                existing_data.append(data)
+                f.seek(0)
+                json.dump(existing_data, f, indent=4)
+                f.truncate()
+        except IOError as e:
+            print(f"Ошибка при добавлении данных в JSON-файл: {e}")
